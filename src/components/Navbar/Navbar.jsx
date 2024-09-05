@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
 
-
     return (
         <div className={styles.navbar} >
             <nav className={styles.nav} >
@@ -27,6 +26,8 @@ export default function Navbar() {
                     </button>
                 </form>
                 <div className={styles.links}>
+                    <Link to="/addgame"> Add Game</Link>
+                    <Link to ="/about"> About </Link>
                     <Link to="/signup"> Sign up </Link>
                     <Link to="/login"> Log In </Link>
                 </div>

@@ -1,9 +1,9 @@
 import styles from "./SignUp.module.scss"
 
 export default function SignUp() {
-    
-    return (
-        <div className={styles.signInContainer}>
+
+  return (
+    <div className={styles.signInContainer}>
       <h1 className={styles.h1}>Sign Up</h1>
       <form className={styles.signInForm}>
         <div className={styles.formGroup}>
@@ -52,18 +52,18 @@ export default function SignUp() {
         </div>
 
         <div className={styles.formGroup}>
-            <label htmlFor="confirmPassword">Are you a game publisher ?</label>
-            <div className={styles.publisher}>
-                <input type="radio" id="dewey" name="drone" value="yes" />
-                <label htmlFor="dewey">Yes</label>
-                <input type="radio" id="dewey" name="drone" value="no" />
-                <label htmlFor="no">No</label>
-            </div>
+          <label htmlFor="confirmPassword">Are you a game publisher ?</label>
+          <div className={styles.publisher}>
+            <input type="radio" id="dewey" name="drone" value="yes" />
+            <label htmlFor="dewey">Yes</label>
+            <input type="radio" id="dewey" name="drone" value="no" />
+            <label htmlFor="no">No</label>
+          </div>
         </div>
         <button type="submit" className={styles.signInButton}>
           Sign Up
         </button>
       </form>
     </div>
-    )
+  )
 }
