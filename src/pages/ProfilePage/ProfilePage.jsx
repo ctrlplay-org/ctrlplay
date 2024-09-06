@@ -15,7 +15,7 @@ export default function ProfilePage() {
     'Elden Ring',
     'Hollow Knight: Silksong',
     'Final Fantasy XVI',
-  ]); // Sample wishlist items
+  ]); 
 
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
@@ -84,31 +84,27 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Games Played Dashboard */}
       <div className={styles.dashboard}>
-        <h2 className={styles.dashboardTitle}>Dashboard</h2>
-
-        {/* Games Played Section */}
-        <div className={styles.gamesSection}>
-          <h3>Games Played</h3>
-          <div className={styles.gamesGrid}>
-            {games.map((game, index) => (
-              <div key={index} className={styles.gameCard}>
-                {game}
-              </div>
-            ))}
-          </div>
+        <h2 className={styles.dashboardTitle}>Games Played</h2>
+        <div className={styles.gamesGrid}>
+          {games.map((game, index) => (
+            <div key={index} className={styles.gameCard}>
+              {game}
+            </div>
+          ))}
         </div>
+      </div>
 
-        {/* Wishlist Section */}
-        <div className={styles.wishlistSection}>
-          <h3>Wishlist</h3>
-          <div className={styles.wishlistGrid}>
-            {wishlist.map((item, index) => (
-              <div key={index} className={styles.wishlistCard}>
-                {item}
-              </div>
-            ))}
-          </div>
+      {/* Wishlist Dashboard */}
+      <div className={styles.dashboard}>
+        <h2 className={styles.dashboardTitle}>Wishlist</h2>
+        <div className={styles.wishlistGrid}>
+          {wishlist.map((item, index) => (
+            <div key={index} className={styles.wishlistCard}>
+              {item}
+            </div>
+          ))}
         </div>
       </div>
     </div>
