@@ -1,0 +1,164 @@
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .bannerContainer {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    color: white;
+  }
+
+  .dashboard h2 {
+    color: white;
+  }
+  
+  .banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .profilePhoto {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: -40px; /* Adjust to shift the content slightly up */
+  }
+  
+  .username {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .editProfileButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: darken(#4a90e2, 10%);
+    }
+  }
+  
+  .editSection {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .uploadSection {
+    margin-bottom: 20px;
+  }
+  
+  .uploadLabel {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .uploadInput {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .dashboard {
+    width: 100%;
+    padding: 20px;
+    background-color: #282828;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboardTitle {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .gamesSection {
+    margin-top: 20px;
+  }
+  
+  .gamesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+  
+  .gameCard {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  /* Wishlist Section */
+  .wishlistSection {
+    margin-top: 20px;
+  }
+  
+  .wishlistGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+  
+  .wishlistCard {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+  

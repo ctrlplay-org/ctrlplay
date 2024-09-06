@@ -27,6 +27,7 @@ export default function Navbar() {
                 </form>
                 <div className={styles.links}>
                     <Link to="/addgame"> Add Game</Link>
+                    <Link to="/profile"> Profile</Link>
                     <Link to ="/about"> About </Link>
                     <Link to="/signup"> Sign up </Link>
                     <Link to="/login"> Log In </Link>

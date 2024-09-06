@@ -73,6 +73,7 @@
     margin-right: 50px;
   }
 
+
  .navbar a {
   color: white;
   text-align: center;
@@ -82,4 +83,8 @@
   font-weight: 400;
   line-height: 20px;
   text-decoration: none;
+
+  &:hover {
+    color: #d0448d; 
+  }
 }

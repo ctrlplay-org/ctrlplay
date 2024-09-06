@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp/SignUp';
 import Footer from './components/Footer/Footer';
 import AddGamePage from './pages/AddGamePage/AddGamePage';
 import AboutPage from './pages/AboutPage/AboutPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/addgame" element={<AddGamePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
