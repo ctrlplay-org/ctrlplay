@@ -36,10 +36,6 @@ function CarouselPage() {
               src={game.image}
               alt={game.name}
             />
-            <Carousel.Caption>
-              <h3>{game.name}</h3>
-              <p>{game.year}</p> 
-            </Carousel.Caption>
           </Carousel.Item>
         ))}
       </Carousel>
