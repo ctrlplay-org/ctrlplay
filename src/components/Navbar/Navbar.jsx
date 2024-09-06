@@ -29,8 +29,7 @@ export default function Navbar() {
                     <Link to="/addgame"> Add Game</Link>
                     <Link to="/profile"> Profile</Link>
                     <Link to ="/about"> About </Link>
-                    <Link to="/signup"> Sign up </Link>
-                    <Link to="/login"> Log In </Link>
+                    <Link to="/login"> Log In / Sign Up </Link>
                 </div>
             </nav>
         </div>
