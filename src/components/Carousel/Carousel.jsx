@@ -5,6 +5,7 @@ import axios from 'axios';
 
 function CarouselPage() {
   const [games, setGames] = useState([]);
+  const [featuredGames, setFeaturedGames] = useState([]);
 
   useEffect(() => {
     axios.get("http://localhost:5005/api/games")
@@ -16,10 +17,18 @@ function CarouselPage() {
       });
   }, []);
 
+  useEffect(()=> {
+    axios.get("http://localhost:5005/api/games/featured")
+      .then(response => setFeaturedGames(response.data))
+      .catch(error => console.error("Error fetching featured games:", error))
+
+    console.log(featuredGames)
+  }, []);
+
   return (
     <div>
       <Carousel>
-        {games.map((game) => (
+        {featuredGames.map((game) => (
           <Carousel.Item key={game._id}>
             <img
               style={{ height: '80vh' }}
