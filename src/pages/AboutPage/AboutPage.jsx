@@ -4,10 +4,23 @@ import styles from "./AboutPage.module.scss"
 export default function AboutPage() {
   return (
     <div className={`${styles.AboutPage}`}>
-      <div className={styles.aboutInfo}>
-        <h1>What is CtrlPlay?</h1>
-        <h3>CtrlPlay is a game reviewing application where you can add, update and delete your own games whilst receiving reviews from other users!</h3>
+      <div className={styles.aboutWebsite}>
+        <div className={styles.aboutLogo}>
+          <video
+            className={`img1 ${styles.video}`}
+            src="ctrlplay-logo-animated.mp4"
+            alt="logo"
+            autoPlay
+            muted
+            loop
+          />
+        </div>
+        <div className={styles.aboutInfo}>
+          <h1>What is CtrlPlay?</h1>
+          <h3>CtrlPlay is a game reviewing application where you can add, update and delete your own games whilst receiving reviews from other users!</h3>
+        </div>
       </div>
+
       <div className={styles.aboutCreators}>
         <h1>Who made CtrlPlay?</h1>
         <div className={styles.aboutCreatorsDiv}>
@@ -41,6 +54,6 @@ export default function AboutPage() {
           </a>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
