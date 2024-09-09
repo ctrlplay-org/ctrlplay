@@ -1,0 +1,148 @@
+/* Main Container for the Game Details Page */
+.gameDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Full-Width Banner */
+.bannerContainer {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 12px;
+}
+
+.gameTitle {
+  font-size: 32px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Content section: two columns */
+.contentSection {
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 50px auto;
+}
+
+/* Left Column for Game Details */
+.leftColumn {
+  flex: 0.3; /* Smaller column */
+  padding-right: 20px;
+}
+
+.detailsSection {
+  background-color: #282828;
+  color: white;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.genre,
+.platforms {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Right Column for Reviews */
+.rightColumn {
+  flex: 0.7; /* Larger column */
+  display: flex;
+  flex-direction: column;
+  background-color: #282828;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Reviews Title */
+.reviewsTitle {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+/* Reviews Container */
+.reviewsContainer {
+  margin-bottom: 20px;
+}
+
+.reviewCard {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.reviewCard h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.reviewCard p {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+/* Add Review Section */
+.addReviewSection {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.inputField {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.reviewInput {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+.addReviewButton {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}

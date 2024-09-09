@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './ProfilePage.module.scss';
 
 export default function ProfilePage() {

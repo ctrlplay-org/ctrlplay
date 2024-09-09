@@ -1,29 +1,21 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Carousel from 'react-bootstrap/Carousel';
-import '../../App.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function CarouselPage() {
-  const [games, setGames] = useState([]);
   const [featuredGames, setFeaturedGames] = useState([]);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    axios.get("http://localhost:5005/api/games")
-      .then(response => {
-        setGames(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching games:", error);
-      });
-  }, []);
-
-  useEffect(()=> {
     axios.get("http://localhost:5005/api/games/featured")
       .then(response => setFeaturedGames(response.data))
-      .catch(error => console.error("Error fetching featured games:", error))
-
-    console.log(featuredGames)
+      .catch(error => console.error("Error fetching featured games:", error));
   }, []);
+
+  const handleGameClick = (gameId) => {
+    navigate(`/games/${gameId}`);
+  };
 
   return (
     <div>
@@ -31,10 +23,11 @@ function CarouselPage() {
         {featuredGames.map((game) => (
           <Carousel.Item key={game._id}>
             <img
-              style={{ height: '80vh' }}
+              style={{ height: '80vh', cursor: 'pointer' }} 
               className="d-block w-100"
               src={game.image}
               alt={game.name}
+              onClick={() => handleGameClick(game._id)} 
             />
           </Carousel.Item>
         ))}
