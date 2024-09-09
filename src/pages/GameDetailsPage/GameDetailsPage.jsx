@@ -1,50 +1,51 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import ReactStars from 'react-rating-stars-component';
 import styles from './GameDetailsPage.module.scss';
 
 function GameDetailsPage() {
   const { gameId } = useParams();
   const [gameDetails, setGameDetails] = useState(null);
-  const [reviews, setReviews] = useState([]); 
+  const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     title: '',
     description: '',
-    rating: '',
-  }); 
+    rating: 0,
+  });
 
   useEffect(() => {
     axios.get(`http://localhost:5005/api/games/${gameId}`)
       .then(response => setGameDetails(response.data))
       .catch(error => console.error("Error fetching game details:", error));
 
-    
+    // Fetch reviews
     axios.get(`http://localhost:5005/api/games/${gameId}/reviews`)
       .then(response => setReviews(response.data))
       .catch(error => console.error("Error fetching reviews:", error));
   }, [gameId]);
 
   const handleAddReview = () => {
-    if (newReview.title.trim() === '' || newReview.rating === '') return;
+    if (newReview.title.trim() === '' || newReview.rating === 0) return;
 
     const reviewData = {
       ...newReview,
-      game: gameId, 
-      date: new Date().toISOString(), 
-      author: "USER_ID", 
+      game: gameId,
+      date: new Date().toISOString(),
+      author: "USER_ID",
     };
 
-    
     axios.post(`http://localhost:5005/api/games/${gameId}/reviews`, reviewData)
       .then(response => {
         setReviews([...reviews, response.data]);
-        setNewReview({ title: '', description: '', rating: '' }); 
+        setNewReview({ title: '', description: '', rating: 0 });
       })
       .catch(error => console.error("Error adding review:", error));
   };
 
   return (
     <div className={styles.gameDetailsContainer}>
+      {/* Full-Width Banner */}
       <div className={styles.bannerContainer}>
         <img
           src={gameDetails?.image}
@@ -56,23 +57,25 @@ function GameDetailsPage() {
         </div>
       </div>
 
-     
+      {/* Content Section */}
       <div className={styles.contentSection}>
-       
+        {/* Left Column for Game Details */}
         <div className={styles.leftColumn}>
           <div className={styles.detailsSection}>
-            <p className={styles.genre}>Genre: {gameDetails?.genre}</p>
-            <p className={styles.platforms}>Available on: {gameDetails?.platforms}</p>
-            <p className={styles.platforms}>By {gameDetails?.publishers[0].name}</p>
-            <p className={styles.platforms}>Year: {gameDetails?.year}</p>
+            <p className={styles.genre}><span>Genre:</span> {gameDetails?.genre}</p>
+            <p className={styles.genre}><span>By:</span> {gameDetails?.publishers[0].name}</p>
+            <p className={styles.genre}><span>Year:</span> {gameDetails?.year}</p>
+            <p className={styles.platforms}><span>Platforms: </span>
+              {gameDetails?.platforms.join(', ')}
+            </p>
           </div>
         </div>
 
-        
+        {/* Right Column for Reviews */}
         <div className={styles.rightColumn}>
           <h2 className={styles.reviewsTitle}>Reviews</h2>
 
-          
+          {/* Reviews Section */}
           <div className={styles.reviewsContainer}>
             {reviews.map((review, index) => (
               <div key={index} className={styles.reviewCard}>
@@ -84,7 +87,7 @@ function GameDetailsPage() {
             ))}
           </div>
 
-          
+          {/* Add Review Section */}
           <div className={styles.addReviewSection}>
             <input
               type="text"
@@ -99,12 +102,12 @@ function GameDetailsPage() {
               placeholder="Description"
               className={styles.reviewInput}
             />
-            <input
-              type="number"
-              placeholder="Rating (1-5)"
-              value={newReview.rating}
-              onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
-              className={styles.inputField}
+            <ReactStars
+              count={5}
+              onChange={(newRating) => setNewReview({ ...newReview, rating: newRating })}
+              size={24}
+              activeColor="#c7ff0b"
+              value={newReview.rating} // set the current rating
             />
             <button onClick={handleAddReview} className={styles.addReviewButton}>
               Add Review
@@ -117,4 +120,3 @@ function GameDetailsPage() {
 }
 
 export default GameDetailsPage;
-
