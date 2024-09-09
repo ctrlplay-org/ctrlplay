@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './LogIn.module.scss'; 
+import styles from './LogIn.module.scss';
 
 export default function LogIn() {
   const [isSignUp, setIsSignUp] = useState(true);
@@ -21,6 +21,15 @@ export default function LogIn() {
             <input type="text" placeholder="User" className={styles.input} />
             <input type="email" placeholder="Email" className={styles.input} />
             <input type="password" placeholder="Password" className={styles.input} />
+            <label for="isPublisher">Are you a Publisher?</label>
+            <div className={styles.formRadio}>
+              <div>
+                <input type="radio" id="isPublisher1" name="drone" value="yes" /> <label for="isPublisher1">Yes</label>
+              </div>
+              <div>
+                <input type="radio" id="isPublisher2" name="drone" value="no" /> <label for="isPublisher2">No</label>
+              </div>
+            </div>
             <button className={styles.btn}>Sign Up</button>
           </form>
         </div>
