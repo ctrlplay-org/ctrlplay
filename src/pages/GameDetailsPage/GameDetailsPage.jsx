@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import ReactStars from 'react-rating-stars-component';
 import styles from './GameDetailsPage.module.scss';
-import { useContext } from "react";                     // <== IMPORT 
-import { AuthContext } from "../../context/auth.context";
+import { AuthContext } from "../../context/auth.context";  // Import AuthContext
 
 function GameDetailsPage() {
   const { gameId } = useParams();
@@ -15,35 +14,58 @@ function GameDetailsPage() {
     description: '',
     rating: 0,
   });
-  const { isLoggedIn } = useContext(AuthContext); 
+  const { isLoggedIn, user } = useContext(AuthContext); 
+
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
       .then(response => setGameDetails(response.data))
       .catch(error => console.error("Error fetching game details:", error));
 
-    // Fetch reviews
-    axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
       .then(response => setReviews(response.data))
       .catch(error => console.error("Error fetching reviews:", error));
   }, [gameId]);
 
   const handleAddReview = () => {
-    if (newReview.title.trim() === '' || newReview.rating === 0) return;
+    if (!newReview.title.trim() || !newReview.rating) return;
 
     const reviewData = {
       ...newReview,
       game: gameId,
       date: new Date().toISOString(),
-      author: "USER_ID",
+      author: user,
     };
+
+    const storedToken = localStorage.getItem('authToken');
+    console.log("Auth Token:", storedToken); 
+
+    axios.post(`${import.meta.env.VITE_API_URL}/api/reviews`, reviewData, { 
+        headers: { Authorization: `Bearer ${storedToken}` } 
+    })
+    .then(() => {
+       
+        axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
+          .then(response => setReviews(response.data))
+          .catch(error => console.error("Erreur getting reviews:", error));
+        
+        
+        setNewReview({ title: '', description: '', rating: 0 });
+    })
+    .catch(error => {
+        console.error("Error while add the review:", error.response ? error.response.data : error.message);
+    });
+  };
+
+  const handleDeleteReview = (reviewId) => {
     const storedToken = localStorage.getItem('authToken');
 
-    axios.post(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`, reviewData, { headers: { Authorization: `Bearer ${storedToken}` } })
-      .then(response => {
-        setReviews([...reviews, response.data]);
-        setNewReview({ title: '', description: '', rating: 0 });
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/reviews/${reviewId}`, {
+      headers: { Authorization: `Bearer ${storedToken}` },
+    })
+      .then(() => {
+        setReviews(reviews.filter(review => review._id !== reviewId));
       })
-      .catch(error => console.error("Error adding review:", error));
+      .catch(error => console.error("Erreur lors de la suppression de la review:", error));
   };
 
   return (
@@ -79,7 +101,6 @@ function GameDetailsPage() {
           <h2 className={styles.reviewsTitle}>Reviews</h2>
 
           {/* Reviews Section */}
-    
           <div className={styles.reviewsContainer}>
             {reviews.map((review, index) => (
               <div key={index} className={styles.reviewCard}>
@@ -87,38 +108,44 @@ function GameDetailsPage() {
                 <p>{review.description}</p>
                 <p>Rating: {review.rating}</p>
                 <small>{new Date(review.date).toLocaleDateString()}</small>
+
+                {isLoggedIn && user && user._id === review.author._id && (
+                  <button onClick={() => handleDeleteReview(review._id)} className={styles.deleteButton}>
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
           </div>
-    
+
           {/* Add Review Section */}
           {isLoggedIn && (
-          <div className={styles.addReviewSection}>
-            <input
-              type="text"
-              placeholder="Title"
-              value={newReview.title}
-              onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
-              className={styles.inputField}
-            />
-            <textarea
-              value={newReview.description}
-              onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
-              placeholder="Description"
-              className={styles.reviewInput}
-            />
-            <ReactStars
-              count={5}
-              onChange={(newRating) => setNewReview({ ...newReview, rating: newRating })}
-              size={24}
-              activeColor="#c7ff0b"
-              value={newReview.rating} // set the current rating
-            />
-            <button onClick={handleAddReview} className={styles.addReviewButton}>
-              Add Review
-            </button>
-          </div>
-           )}
+            <div className={styles.addReviewSection}>
+              <input
+                type="text"
+                placeholder="Title"
+                value={newReview.title}
+                onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
+                className={styles.inputField}
+              />
+              <textarea
+                value={newReview.description}
+                onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
+                placeholder="Description"
+                className={styles.reviewInput}
+              />
+              <ReactStars
+                count={5}
+                onChange={(newRating) => setNewReview({ ...newReview, rating: newRating })}
+                size={24}
+                activeColor="#c7ff0b"
+                value={newReview.rating}
+              />
+              <button onClick={handleAddReview} className={styles.addReviewButton}>
+                Add Review
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
