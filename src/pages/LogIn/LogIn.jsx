@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import  { useState, useContext } from 'react';
 import styles from './LogIn.module.scss';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/auth.context";
 
 export default function LogIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [errorMessage, setErrorMessage] = useState(undefined);
   const [isSignUp, setIsSignUp] = useState(true);
+ 
+  const navigate = useNavigate();
 
+  const { storeToken, authenticateUser } = useContext(AuthContext);
+  
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleName = (e) => setName(e.target.value);
+ 
   const handleSignInClick = () => {
     setIsSignUp(false);
   };
@@ -11,37 +26,78 @@ export default function LogIn() {
   const handleSignUpClick = () => {
     setIsSignUp(true);
   };
+  
+  const handleSignupSubmit = (e) => {
+    e.preventDefault();
+    
+    const requestBody = { email, password, name };
+ 
+    
+    axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, requestBody)
+      .then((response) => {
+        handleSignUpClick();
+        setName('');
+        setEmail('');
+        setPassword('');
+      })
+      .catch((error) => {
+        const errorDescription = error.response.data.message;
+        setErrorMessage(errorDescription);
+      })
+  };
+
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    const requestBody = { email, password };
+ 
+    axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, requestBody)
+      .then((response) => {
+      
+        console.log('JWT token', response.data.authToken );
+        storeToken(response.data.authToken); 
+        authenticateUser(); 
+        navigate('/');                                  
+      })
+      .catch((error) => {
+        const errorDescription = error.response.data.message;
+        setErrorMessage(errorDescription);
+      })
+  };
 
   return (
     <div className={styles.LogIn}>
+      {/* sign up */}
       <div className={`${styles.container} ${isSignUp ? styles.rightPanelActive : ''}`}>
         <div className={`${styles.containerForm} ${styles.containerSignup}`}>
-          <form action="#" className={styles.form} id="form1">
+          <form action="#" className={styles.form} id="form1" onSubmit={handleSignupSubmit}>
             <h2 className={styles.formTitle}>Sign Up</h2>
-            <input type="text" placeholder="User" className={styles.input} />
-            <input type="email" placeholder="Email" className={styles.input} />
-            <input type="password" placeholder="Password" className={styles.input} />
-            <label for="isPublisher">Are you a Publisher?</label>
+            <input type="text" placeholder="User" value={name} className={styles.input} onChange={handleName}/>
+            <input type="email" placeholder="Email" value={email} className={styles.input} onChange={handleEmail}/>
+            <input type="password" placeholder="Password" value={password} className={styles.input} onChange={handlePassword} />
+            <label>Are you a Publisher?</label>
             <div className={styles.formRadio}>
               <div>
-                <input type="radio" id="isPublisher1" name="drone" value="yes" /> <label for="isPublisher1">Yes</label>
+                <input type="radio" id="isPublisher1" name="drone" value="yes" /> <label >Yes</label>
               </div>
               <div>
-                <input type="radio" id="isPublisher2" name="drone" value="no" /> <label for="isPublisher2">No</label>
+                <input type="radio" id="isPublisher2" name="drone" value="no" /> <label >No</label>
               </div>
             </div>
             <button className={styles.btn}>Sign Up</button>
           </form>
+          { errorMessage && <p className="error-message">{errorMessage}</p> }
         </div>
-
+          {/* sign in */}
         <div className={`${styles.containerForm} ${styles.containerSignin}`}>
-          <form action="#" className={styles.form} id="form2">
+          <form action="#" className={styles.form} id="form2" onSubmit={handleLoginSubmit}>
             <h2 className={styles.formTitle}>Sign In</h2>
-            <input type="email" placeholder="Email" className={styles.input} />
-            <input type="password" placeholder="Password" className={styles.input} />
+            <input type="email" placeholder="Email" className={styles.input}  onChange={handleEmail}/>
+            <input type="password" placeholder="Password" className={styles.input} onChange={handlePassword}/>
             <a href="#" className={styles.link}>Forgot your password?</a>
             <button className={styles.btn}>Sign In</button>
           </form>
+          { errorMessage && <p className="error-message">{errorMessage}</p> }
         </div>
 
         <div className={styles.containerOverlay}>

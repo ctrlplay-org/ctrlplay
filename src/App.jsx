@@ -9,6 +9,7 @@ import AddGamePage from './pages/AddGamePage/AddGamePage';
 import AboutPage from './pages/AboutPage/AboutPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import GameDetailsPage from './pages/GameDetailsPage/GameDetailsPage';
+import IsPrivate from './components/IsPrivate/IsPrivate';
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
       <div className='Routes'>
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/addgame" element={<AddGamePage />} />
+          <Route path="/addgame" element={<IsPrivate><AddGamePage /></IsPrivate>} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LogIn />} />

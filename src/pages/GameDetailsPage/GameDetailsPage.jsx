@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactStars from 'react-rating-stars-component';
 import styles from './GameDetailsPage.module.scss';
+import { useContext } from "react";                     // <== IMPORT 
+import { AuthContext } from "../../context/auth.context";
 
 function GameDetailsPage() {
   const { gameId } = useParams();
@@ -13,7 +15,7 @@ function GameDetailsPage() {
     description: '',
     rating: 0,
   });
-
+  const { isLoggedIn } = useContext(AuthContext); 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
       .then(response => setGameDetails(response.data))
@@ -34,8 +36,9 @@ function GameDetailsPage() {
       date: new Date().toISOString(),
       author: "USER_ID",
     };
+    const storedToken = localStorage.getItem('authToken');
 
-    axios.post(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`, reviewData)
+    axios.post(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`, reviewData, { headers: { Authorization: `Bearer ${storedToken}` } })
       .then(response => {
         setReviews([...reviews, response.data]);
         setNewReview({ title: '', description: '', rating: 0 });
@@ -76,6 +79,7 @@ function GameDetailsPage() {
           <h2 className={styles.reviewsTitle}>Reviews</h2>
 
           {/* Reviews Section */}
+    
           <div className={styles.reviewsContainer}>
             {reviews.map((review, index) => (
               <div key={index} className={styles.reviewCard}>
@@ -86,8 +90,9 @@ function GameDetailsPage() {
               </div>
             ))}
           </div>
-
+    
           {/* Add Review Section */}
+          {isLoggedIn && (
           <div className={styles.addReviewSection}>
             <input
               type="text"
@@ -113,6 +118,7 @@ function GameDetailsPage() {
               Add Review
             </button>
           </div>
+           )}
         </div>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import styles from "./Navbar.module.scss"
 import { Link } from "react-router-dom";
+import { useContext } from "react";                     // <== IMPORT 
+import { AuthContext } from "../../context/auth.context";
 
 export default function Navbar() {
-
+    const { isLoggedIn, user, logOutUser } = useContext(AuthContext); 
     return (
         <div className={styles.navbar} >
             <nav className={styles.nav} >
@@ -26,10 +28,18 @@ export default function Navbar() {
                     </button>
                 </form>
                 <div className={styles.links}>
+                        {isLoggedIn && (
+                    <>
                     <Link to="/addgame"> Add Game</Link>
                     <Link to="/profile"> Profile</Link>
+                    <button onClick={logOutUser}>Logout</button>
+                    <span>{user && user.name}</span>
+                    </>
+                )}
                     <Link to ="/about"> About </Link>
+                    {!isLoggedIn && (
                     <Link to="/login"> Sign In </Link>
+                )}
                 </div>
             </nav>
         </div>
