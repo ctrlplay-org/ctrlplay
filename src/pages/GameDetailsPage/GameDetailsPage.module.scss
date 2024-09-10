@@ -157,3 +157,40 @@ span {
   // color: #c7ff0b;
   color: #d0448d;
 }
+
+.editReviewSection {
+  margin-top: 20px;
+}
+
+.editButton, .deleteButton, .addReviewButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.editButton {
+  background-color: #ffc107;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+}
+
+.inputField, .reviewInput {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.addReviewSection {
+  margin-top: 20px;
+}
