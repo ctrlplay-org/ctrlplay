@@ -12,7 +12,7 @@ export default function Homepage() {
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/`)
       .then(response => setGames(response.data))
-      .catch(error => console.error("Error fetching featured games:", error));
+      .catch(error => console.error("Error fetching games:", error));
   }, []);
 
   const handleGameClick = (gameId) => {
