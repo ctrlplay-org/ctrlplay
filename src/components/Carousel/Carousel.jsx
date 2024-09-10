@@ -8,7 +8,7 @@ function CarouselPage() {
   const navigate = useNavigate(); 
 
   useEffect(() => {
-    axios.get("http://localhost:5005/api/games/featured")
+    axios.get(`${import.meta.env.VITE_API_URL}/api/games/featured`)
       .then(response => setFeaturedGames(response.data))
       .catch(error => console.error("Error fetching featured games:", error));
   }, []);

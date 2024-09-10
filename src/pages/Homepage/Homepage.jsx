@@ -10,7 +10,7 @@ export default function Homepage() {
   const navigate = useNavigate(); 
 
   useEffect(() => {
-    axios.get("http://localhost:5005/api/games/")
+    axios.get(`${import.meta.env.VITE_API_URL}/api/games/`)
       .then(response => setGames(response.data))
       .catch(error => console.error("Error fetching featured games:", error));
   }, []);

@@ -15,12 +15,12 @@ function GameDetailsPage() {
   });
 
   useEffect(() => {
-    axios.get(`http://localhost:5005/api/games/${gameId}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
       .then(response => setGameDetails(response.data))
       .catch(error => console.error("Error fetching game details:", error));
 
     // Fetch reviews
-    axios.get(`http://localhost:5005/api/games/${gameId}/reviews`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`)
       .then(response => setReviews(response.data))
       .catch(error => console.error("Error fetching reviews:", error));
   }, [gameId]);
@@ -35,7 +35,7 @@ function GameDetailsPage() {
       author: "USER_ID",
     };
 
-    axios.post(`http://localhost:5005/api/games/${gameId}/reviews`, reviewData)
+    axios.post(`${import.meta.env.VITE_API_URL}/api/games/${gameId}/reviews`, reviewData)
       .then(response => {
         setReviews([...reviews, response.data]);
         setNewReview({ title: '', description: '', rating: 0 });
