@@ -101,11 +101,43 @@ function GameDetailsPage() {
     axios.delete(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`, {
       headers: { Authorization: `Bearer ${storedToken}` }
     })
-    .then(() => {
-      console.log("Game deleted successfully");
-      navigate('/');
-    })
-    .catch(error => console.error("Error deleting game:", error));
+      .then(() => {
+        console.log("Game deleted successfully");
+        navigate('/');
+      })
+      .catch(error => console.error("Error deleting game:", error));
+  };
+
+  const handleAddPlayed = () => {
+    if (!isLoggedIn || !user) return;
+
+    const storedToken = localStorage.getItem('authToken');
+
+    axios.put(
+      `${import.meta.env.VITE_API_URL}/api/users/${user._id}/played`,
+      { gameId },
+      { headers: { Authorization: `Bearer ${storedToken}` } }
+    )
+      .then(response => {
+        console.log("Game added to played list successfully:", response.data);
+      })
+      .catch(error => next(error));
+  };
+
+  const handleAddWishlist = () => {
+    if (!isLoggedIn || !user) return;
+
+    const storedToken = localStorage.getItem('authToken');
+
+    axios.put(
+      `${import.meta.env.VITE_API_URL}/api/users/${user._id}/wishlist`,
+      { gameId },
+      { headers: { Authorization: `Bearer ${storedToken}` } }
+    )
+      .then(response => {
+        console.log("Game added to wishlist successfully:", response.data);
+      })
+      .catch(error => next(error));
   };
 
   return (
@@ -136,13 +168,23 @@ function GameDetailsPage() {
           </div>
           <div className={styles.editColumn}>
             {isLoggedIn && user && gameDetails?.publishers[0]._id === user._id && (
+                <>
+                  <button onClick={handleEditGame} className={styles.editButton}>
+                    Edit Game
+                  </button>
+                  <button onClick={handleDeleteGame} className={styles.deleteButton}>
+                    Delete Game
+                  </button>
+                </>
+            )}
+            {isLoggedIn && (
               <>
-              <button onClick={handleEditGame} className={styles.editButton}>
-                Edit Game
-              </button>
-              <button onClick={handleDeleteGame} className={styles.deleteButton}>
-              Delete Game
-              </button>
+                  <button onClick={handleAddPlayed} className={styles.playedButton}>
+                    Played
+                  </button>
+                  <button onClick={handleAddWishlist} className={styles.wishlistButton}>
+                    Wishlist
+                  </button>
               </>
             )}
           </div>

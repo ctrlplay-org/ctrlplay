@@ -61,6 +61,16 @@ export default function ProfilePage() {
     }
   };
 
+  const { user, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <p>Loading...</p>; // Or any loading indicator
+  }
+
+  if (!user) {
+    return <p>User not found</p>; // Or any appropriate message
+  }
+
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
