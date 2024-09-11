@@ -2,8 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useContext } from "react";                    
 import { AuthContext } from "../../context/auth.context";
+import { useNavigate } from 'react-router-dom';
 import styles from "./AddGamePage.module.scss";
-
 
 export default function AddGamePage() {
   const { isLoggedIn, user } = useContext(AuthContext);  
@@ -16,9 +16,50 @@ export default function AddGamePage() {
     publishers: ''
   });
 
+  const [errors, setErrors] = useState({});  
+  const navigate = useNavigate();
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!newGame.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!newGame.year.trim()) {
+      newErrors.year = "Year is required";
+    } else if (!/^\d{4}$/.test(newGame.year)) {
+      newErrors.year = "Year must be a valid 4-digit number";
+    }
+
+    if (!newGame.genre.trim()) {
+      newErrors.genre = "At least one genre is required";
+    }
+
+    if (!newGame.platforms.trim()) {
+      newErrors.platforms = "At least one platform is required";
+    }
+
+    if (!newGame.publishers.trim()) {
+      newErrors.publishers = "At least one publisher is required";
+    }
+
+    if (!newGame.image.trim()) {
+      newErrors.image = "Image URL is required";
+    } else if (!/^https?:\/\/.*\.(jpeg|jpg|gif|png)$/.test(newGame.image)) {
+      newErrors.image = "Image URL must be a valid URL and end with .jpeg, .jpg, .gif, or .png";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; 
+  };
+
   const handleAddGame = (event) => {
     event.preventDefault(); 
-    if (!newGame.name.trim() || !newGame.year.trim()) return;
+
+    if (!validate()) {
+      return; 
+    }
 
     const gameData = {
       name: newGame.name,
@@ -36,7 +77,10 @@ export default function AddGamePage() {
     })
     .then(response => {
       console.log("Game created successfully:", response.data);
+      const gameId = response.data._id;
       setNewGame({ name: '', year: '', genre: '', image: '', platforms: '', publishers: '' });
+      setErrors({});
+      navigate(`/games/${gameId}`);
     })
     .catch(error => console.error("Error adding game:", error));
   };
@@ -59,6 +103,7 @@ export default function AddGamePage() {
             placeholder="Enter the game name"
             className={styles.inputField}
           />
+          {errors.name && <span className={styles.error}>{errors.name}</span>}
         </div>
         
         <div className={styles.formGroup}>
@@ -73,6 +118,7 @@ export default function AddGamePage() {
             placeholder="Enter the year it was created"
             className={styles.inputField}
           />
+          {errors.year && <span className={styles.error}>{errors.year}</span>}
         </div>
         
         <div className={styles.formGroup}>
@@ -87,6 +133,7 @@ export default function AddGamePage() {
             placeholder="Enter the game genre(s), separated by commas"
             className={styles.inputField}
           />
+          {errors.genre && <span className={styles.error}>{errors.genre}</span>}
         </div>
 
         <div className={styles.formGroup}>
@@ -101,6 +148,7 @@ export default function AddGamePage() {
             placeholder="Enter the platforms, separated by commas"
             className={styles.inputField}
           />
+          {errors.platforms && <span className={styles.error}>{errors.platforms}</span>}
         </div>
 
         <div className={styles.formGroup}>
@@ -114,6 +162,7 @@ export default function AddGamePage() {
             placeholder="Enter publisher(s), separated by commas"
             className={styles.inputField}
           />
+          {errors.publishers && <span className={styles.error}>{errors.publishers}</span>}
         </div>
 
         <div className={styles.formGroup}>
@@ -128,6 +177,7 @@ export default function AddGamePage() {
             placeholder="Enter the game image URL"
             className={styles.inputField}
           />
+          {errors.image && <span className={styles.error}>{errors.image}</span>}
         </div>
 
         <button type="submit" className={styles.submitButton}>
