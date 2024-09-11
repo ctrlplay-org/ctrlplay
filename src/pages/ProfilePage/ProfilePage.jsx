@@ -1,23 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './ProfilePage.module.scss';
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export default function ProfilePage() {
+  const { userId } = useParams();
+  const [profileUser, setProfileUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [banner, setBanner] = useState('/path/to/default/banner.jpg');
   const [profilePicture, setProfilePicture] = useState('/path/to/profile/photo.jpg');
-  const [isEditing, setIsEditing] = useState(false);
-  const [games, setGames] = useState([
-    'Cyberpunk 2077',
-    'The Witcher 3',
-    'Hades',
-    'Red Dead Redemption 2',
-  ]);
-  const [wishlist, setWishlist] = useState([
-    'Elden Ring',
-    'Hollow Knight: Silksong',
-    'Final Fantasy XVI',
-  ]);
+  const [games, setGames] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const { user, isLoading: authLoading } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
+      try {
+        const storedToken = localStorage.getItem("authToken");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+          headers: { Authorization: `Bearer ${storedToken}` }
+        });
+        setProfileUser(response.data);
+        setGames(response.data.games || []);
+        setWishlist(response.data.wishlist || []);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, [userId]);
+
+  if (authLoading || isLoading) {
+    return <p>Loading...</p>; // Or any loading indicator
+  }
+
+  if (!profileUser) {
+    return <p>User not found</p>; // Or any appropriate message
+  }
 
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
@@ -35,41 +61,32 @@ export default function ProfilePage() {
     }
   };
 
-  const { user, isLoading } = useContext(AuthContext);
-
-  if (isLoading) {
-    return <p>Loading...</p>; // Or any loading indicator
-  }
-
-  if (!user) {
-    return <p>User not found</p>; // Or any appropriate message
-  }
-  console.log(user)
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
-        <img src={user.bannerImg || '/path/to/default/banner.jpg'} alt="Banner" className={styles.banner} />
+        <img src={profileUser.bannerImg || '/path/to/default/banner.jpg'} alt="Banner" className={styles.banner} />
         <img
-          src={user.profileImg || '/path/to/profile/photo.jpg'}
+          src={profileUser.profileImg || '/path/to/profile/photo.jpg'}
           alt="Profile"
           className={styles.profilePhoto}
         />
       </div>
 
       <div className={styles.profileSection}>
-        <h1 className={styles.username}>{user.name}</h1>
-        <button
-          className={styles.editProfileButton}
-          onClick={() => setIsEditing(!isEditing)}
-        >
-          {isEditing ? 'Save Profile' : 'Edit Profile'}
-        </button>
+        <h1 className={styles.username}>{profileUser.name}</h1>
+        {user && user._id === profileUser._id && (
+          <button
+            className={styles.editProfileButton}
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {isEditing ? 'Save Profile' : 'Edit Profile'}
+          </button>
+        )}
       </div>
 
       {isEditing && (
         <div className={styles.editSection}>
           <h2>Edit Profile</h2>
-
           <div className={styles.uploadSection}>
             <label htmlFor="bannerUpload" className={styles.uploadLabel}>
               Change Banner
@@ -81,7 +98,6 @@ export default function ProfilePage() {
               className={styles.uploadInput}
             />
           </div>
-
           <div className={styles.uploadSection}>
             <label htmlFor="profilePictureUpload" className={styles.uploadLabel}>
               Change Profile Picture
@@ -96,7 +112,6 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* Games Played Dashboard */}
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>Games Played</h2>
         <div className={styles.gamesGrid}>
@@ -108,7 +123,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Wishlist Dashboard */}
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>Wishlist</h2>
         <div className={styles.wishlistGrid}>
