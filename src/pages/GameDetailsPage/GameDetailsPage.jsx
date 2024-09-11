@@ -1,12 +1,13 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import ReactStars from 'react-rating-stars-component';
 import styles from './GameDetailsPage.module.scss';
-import { AuthContext } from "../../context/auth.context";  
+import { AuthContext } from "../../context/auth.context";
 
 function GameDetailsPage() {
   const { gameId } = useParams();
+  const navigate = useNavigate();
   const [gameDetails, setGameDetails] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -20,7 +21,7 @@ function GameDetailsPage() {
     description: '',
     rating: 0,
   });
-  const { isLoggedIn, user } = useContext(AuthContext); 
+  const { isLoggedIn, user } = useContext(AuthContext);
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
@@ -44,19 +45,19 @@ function GameDetailsPage() {
 
     const storedToken = localStorage.getItem('authToken');
 
-    axios.post(`${import.meta.env.VITE_API_URL}/api/reviews`, reviewData, { 
-        headers: { Authorization: `Bearer ${storedToken}` } 
+    axios.post(`${import.meta.env.VITE_API_URL}/api/reviews`, reviewData, {
+      headers: { Authorization: `Bearer ${storedToken}` }
     })
-    .then(() => {
+      .then(() => {
         axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
           .then(response => setReviews(response.data))
           .catch(error => console.error("Error fetching reviews:", error));
-        
+
         setNewReview({ title: '', description: '', rating: 0 });
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error("Error while adding the review:", error.response ? error.response.data : error.message);
-    });
+      });
   };
 
   const handleEditReview = () => {
@@ -67,15 +68,15 @@ function GameDetailsPage() {
     axios.put(`${import.meta.env.VITE_API_URL}/api/reviews/${editingReviewId}`, editReview, {
       headers: { Authorization: `Bearer ${storedToken}` },
     })
-    .then(() => {
-      axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
-        .then(response => setReviews(response.data))
-        .catch(error => console.error("Error fetching reviews:", error));
-      
-      setEditingReviewId(null); 
-      setEditReview({ title: '', description: '', rating: 0 });
-    })
-    .catch(error => console.error("Error while updating the review:", error));
+      .then(() => {
+        axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
+          .then(response => setReviews(response.data))
+          .catch(error => console.error("Error fetching reviews:", error));
+
+        setEditingReviewId(null);
+        setEditReview({ title: '', description: '', rating: 0 });
+      })
+      .catch(error => console.error("Error while updating the review:", error));
   };
 
   const handleDeleteReview = (reviewId) => {
@@ -84,10 +85,27 @@ function GameDetailsPage() {
     axios.delete(`${import.meta.env.VITE_API_URL}/api/reviews/${reviewId}`, {
       headers: { Authorization: `Bearer ${storedToken}` },
     })
-    .then(() => {
-      setReviews(reviews.filter(review => review._id !== reviewId));
+      .then(() => {
+        setReviews(reviews.filter(review => review._id !== reviewId));
+      })
+      .catch(error => console.error("Error while deleting the review:", error));
+  };
+
+  const handleEditGame = () => {
+    navigate(`/games/${gameId}/edit`);
+  };
+
+  const handleDeleteGame = () => {
+    const storedToken = localStorage.getItem('authToken');
+
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`, {
+      headers: { Authorization: `Bearer ${storedToken}` }
     })
-    .catch(error => console.error("Error while deleting the review:", error));
+    .then(() => {
+      console.log("Game deleted successfully");
+      navigate('/');
+    })
+    .catch(error => console.error("Error deleting game:", error));
   };
 
   return (
@@ -115,6 +133,18 @@ function GameDetailsPage() {
             <p className={styles.platforms}><span>Platforms: </span>
               {gameDetails?.platforms.join(', ')}
             </p>
+          </div>
+          <div className={styles.editColumn}>
+            {isLoggedIn && user && gameDetails?.publishers[0]._id === user._id && (
+              <>
+              <button onClick={handleEditGame} className={styles.editButton}>
+                Edit Game
+              </button>
+              <button onClick={handleDeleteGame} className={styles.deleteButton}>
+              Delete Game
+              </button>
+              </>
+            )}
           </div>
         </div>
 

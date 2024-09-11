@@ -10,6 +10,7 @@ import AboutPage from './pages/AboutPage/AboutPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import GameDetailsPage from './pages/GameDetailsPage/GameDetailsPage';
 import IsPrivate from './components/IsPrivate/IsPrivate';
+import EditGamePage from './pages/EditGamePage/EditGamePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/addgame" element={<IsPrivate><AddGamePage /></IsPrivate>} />
+          <Route path ="/games/:gameId/edit" element={<EditGamePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LogIn />} />

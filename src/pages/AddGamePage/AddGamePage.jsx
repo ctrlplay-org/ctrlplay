@@ -4,8 +4,9 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
 import styles from "./AddGamePage.module.scss";
 
+
 export default function AddGamePage() {
-  const { isLoggedIn } = useContext(AuthContext);  
+  const { isLoggedIn, user } = useContext(AuthContext);  
   const [newGame, setNewGame] = useState({
     name: '',
     year: '',
