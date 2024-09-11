@@ -44,7 +44,7 @@ export default function ProfilePage() {
   if (!user) {
     return <p>User not found</p>; // Or any appropriate message
   }
-  console.log(user)
+
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
