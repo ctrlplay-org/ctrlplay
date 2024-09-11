@@ -61,6 +61,34 @@ export default function ProfilePage() {
     }
   };
 
+  const handlePlayedDelete = async (gameId) => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userId}/played/${gameId}`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+      setGames(prevGames => prevGames.filter(game => game._id !== gameId));
+    } catch (error) {
+      console.error('Error deleting game from played:', error);
+    }
+  };
+
+  const handleWishlistDelete = async (gameId) => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userId}/wishlist/${gameId}`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+      setWishlist(prevWishlist => prevWishlist.filter(game => game._id !== gameId));
+    } catch (error) {
+      console.error('Error deleting game from wishlist:', error);
+    }
+  };
+
+  const handleGameClick = (gameId) => {
+    navigate(`/games/${gameId}`);
+  };
+
   console.log(user)
   return (
     <div className={styles.profileContainer}>
@@ -152,6 +180,7 @@ export default function ProfilePage() {
             }}
           >
             {game.name}
+            <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>
           </div>
           ))}
         </div>
@@ -173,6 +202,7 @@ export default function ProfilePage() {
             }}
           >
             {game.name}
+            <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>
           </div>
           ))}
         </div>
