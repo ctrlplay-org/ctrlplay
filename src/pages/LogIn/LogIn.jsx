@@ -10,6 +10,7 @@ export default function LogIn() {
   const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isSignUp, setIsSignUp] = useState(true);
+  const [isPublisher, setIsPublisher] = useState(false);
  
   const navigate = useNavigate();
 
@@ -26,19 +27,23 @@ export default function LogIn() {
   const handleSignUpClick = () => {
     setIsSignUp(true);
   };
+
+  const handleIsPublisherChange = (e) => {
+    setIsPublisher(e.target.value === "yes");
+  };
   
   const handleSignupSubmit = (e) => {
     e.preventDefault();
     
-    const requestBody = { email, password, name };
+    const requestBody = { email, password, name, isPublisher };
  
-    
     axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, requestBody)
       .then((response) => {
-        handleSignUpClick();
+        handleSignInClick();
         setName('');
         setEmail('');
         setPassword('');
+        setIsPublisher(false);
       })
       .catch((error) => {
         const errorDescription = error.response.data.message;
@@ -77,11 +82,13 @@ export default function LogIn() {
             <input type="password" placeholder="Password" value={password} className={styles.input} onChange={handlePassword} />
             <label>Are you a Publisher?</label>
             <div className={styles.formRadio}>
-              <div>
-                <input type="radio" id="isPublisher1" name="drone" value="yes" /> <label >Yes</label>
+            <div>
+                <input type="radio" id="isPublisher1" name="isPublisher" value="yes" onChange={handleIsPublisherChange} checked={isPublisher === true} /> 
+                <label htmlFor="isPublisher1">Yes</label>
               </div>
               <div>
-                <input type="radio" id="isPublisher2" name="drone" value="no" /> <label >No</label>
+                <input type="radio" id="isPublisher2" name="isPublisher" value="no" onChange={handleIsPublisherChange} checked={isPublisher === false} /> 
+                <label htmlFor="isPublisher2">No</label>
               </div>
             </div>
             <button className={styles.btn}>Sign Up</button>

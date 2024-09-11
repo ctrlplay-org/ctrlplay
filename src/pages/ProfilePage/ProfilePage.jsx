@@ -61,7 +61,7 @@ export default function ProfilePage() {
     }
   };
 
-  console.log(profileUser)
+  console.log(user)
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
