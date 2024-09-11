@@ -1,0 +1,43 @@
+.searchForm {
+    display: flex;
+    width: 440px;
+    padding: 8px 18px 6px 17px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 50px;
+    border: 1px solid #DEDFEC;
+    background: #FFF;
+    margin: 0 auto;
+  }
+  
+  .searchInput {
+    flex-grow: 1;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    color: #959CB0;
+    font-family: 'Inter', sans-serif;
+    font-size: 15.125px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  .searchButton {
+    display: flex;
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 10%;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .fa {
+    font-size: 20px;
+  }
+  

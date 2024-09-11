@@ -2,6 +2,7 @@ import styles from "./Navbar.module.scss"
 import { Link } from "react-router-dom";
 import { useContext } from "react";                     // <== IMPORT 
 import { AuthContext } from "../../context/auth.context";
+import SearchBar from "../SearchBar/SearchBar";
 
 export default function Navbar() {
     const { isLoggedIn, user, logOutUser } = useContext(AuthContext); 
@@ -17,21 +18,12 @@ export default function Navbar() {
             muted
             loop
           /></Link>
-                <form className={styles.searchForm}>
-                    <input
-                        type="text"
-                        placeholder="Search for a game or a user"
-                        className={styles.searchInput}
-                    />
-                    <button type="submit" className={styles.searchButton}>
-                        <i className={`fa-solid fa-magnifying-glass ${styles.fa}`}></i>
-                    </button>
-                </form>
+                <SearchBar />
                 <div className={styles.links}>
                         {isLoggedIn && (
                     <>
                     <Link to="/addgame"> Add Game</Link>
-                    <Link to="/profile"> Profile</Link>
+                    <Link to={`/users/${user._id}`}> Profile</Link>
                     <button onClick={logOutUser}>Logout</button>
                     <span>{user && user.name}</span>
                     </>

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styles from './ProfilePage.module.scss';
+import { useContext } from "react";
+import { AuthContext } from "../../context/auth.context";
 
 export default function ProfilePage() {
   const [banner, setBanner] = useState('/path/to/default/banner.jpg');
@@ -15,7 +17,7 @@ export default function ProfilePage() {
     'Elden Ring',
     'Hollow Knight: Silksong',
     'Final Fantasy XVI',
-  ]); 
+  ]);
 
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
@@ -33,19 +35,29 @@ export default function ProfilePage() {
     }
   };
 
+  const { user, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <p>Loading...</p>; // Or any loading indicator
+  }
+
+  if (!user) {
+    return <p>User not found</p>; // Or any appropriate message
+  }
+  console.log(user)
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
-        <img src={banner} alt="Banner" className={styles.banner} />
+        <img src={user.bannerImg || '/path/to/default/banner.jpg'} alt="Banner" className={styles.banner} />
         <img
-          src={profilePicture}
+          src={user.profileImg || '/path/to/profile/photo.jpg'}
           alt="Profile"
           className={styles.profilePhoto}
         />
       </div>
 
       <div className={styles.profileSection}>
-        <h1 className={styles.username}>John Doe</h1>
+        <h1 className={styles.username}>{user.name}</h1>
         <button
           className={styles.editProfileButton}
           onClick={() => setIsEditing(!isEditing)}
