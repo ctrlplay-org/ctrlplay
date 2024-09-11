@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './ProfilePage.module.scss';
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function ProfilePage() {
@@ -15,6 +15,8 @@ export default function ProfilePage() {
   const [wishlist, setWishlist] = useState([]);
   const { user, isLoading: authLoading } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -180,7 +182,7 @@ export default function ProfilePage() {
             }}
           >
             {game.name}
-            <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>
+            {profileUser._id === user._id && <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>}
           </div>
           ))}
         </div>
@@ -202,7 +204,7 @@ export default function ProfilePage() {
             }}
           >
             {game.name}
-            <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>
+            {profileUser._id === user._id && <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>}
           </div>
           ))}
         </div>
