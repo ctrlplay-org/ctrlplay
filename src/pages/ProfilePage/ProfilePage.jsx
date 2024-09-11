@@ -61,6 +61,7 @@ export default function ProfilePage() {
     }
   };
 
+  console.log(profileUser)
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
@@ -112,13 +113,46 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {profileUser.isPublisher && (
+        <div className={styles.dashboard}>
+        <h2 className={styles.dashboardTitle}>Games Created</h2>
+        <div className={styles.gamesGrid}>
+          {profileUser.games.map(game => (
+            <div
+            key={game.id}
+            className={styles.gameCard}
+            onClick={() => handleGameClick(game._id)}
+            style={{
+              backgroundImage: `url(${game.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {game.name}
+          </div>
+          ))}
+        </div>
+      </div>
+      )}
+
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>Games Played</h2>
         <div className={styles.gamesGrid}>
-          {games.map((game, index) => (
-            <div key={index} className={styles.gameCard}>
-              {game}
-            </div>
+          {profileUser.played.map(game => (
+            <div
+            key={game.id}
+            className={styles.gameCard}
+            onClick={() => handleGameClick(game._id)}
+            style={{
+              backgroundImage: `url(${game.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {game.name}
+          </div>
           ))}
         </div>
       </div>
@@ -126,10 +160,20 @@ export default function ProfilePage() {
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>Wishlist</h2>
         <div className={styles.wishlistGrid}>
-          {wishlist.map((item, index) => (
-            <div key={index} className={styles.wishlistCard}>
-              {item}
-            </div>
+        {profileUser.wishlist.map(game => (
+            <div
+            key={game.id}
+            className={styles.gameCard}
+            onClick={() => handleGameClick(game._id)}
+            style={{
+              backgroundImage: `url(${game.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {game.name}
+          </div>
           ))}
         </div>
       </div>
