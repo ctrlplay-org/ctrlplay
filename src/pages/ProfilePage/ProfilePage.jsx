@@ -9,12 +9,13 @@ export default function ProfilePage() {
   const { userId } = useParams();
   const [profileUser, setProfileUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [banner, setBanner] = useState('/path/to/default/banner.jpg');
-  const [profilePicture, setProfilePicture] = useState('/path/to/profile/photo.jpg');
+  const [banner, setBanner] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [games, setGames] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const { user, isLoading: authLoading } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,31 +36,85 @@ export default function ProfilePage() {
         setIsLoading(false);
       }
     };
-  
+
     fetchProfile();
   }, [userId]);
 
   if (authLoading || isLoading) {
-    return <p>Loading...</p>; // Or any loading indicator
+    return <p>Loading...</p>;
   }
 
   if (!profileUser) {
-    return <p>User not found</p>; // Or any appropriate message
+    return <p>User not found</p>;
   }
 
-  const handleBannerChange = (e) => {
+  const handleSubmit = async () => {
+    const storedToken = localStorage.getItem("authToken");
+
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+            headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        setProfileUser(response.data);
+
+        setIsEditing(false);
+        setBanner('');  
+        setImageUrl('');  
+    } catch (error) {
+        console.error('Error updating profile:', error);
+    }
+};
+
+  const handleBannerChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setBanner(fileURL);
+      try {
+        const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
+        const storedToken = localStorage.getItem("authToken");
+        const dataToUpload = new FormData();
+        dataToUpload.append("file", file);
+        dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+
+        const response = await axios.post(url, dataToUpload);
+        const uploadedImageUrl = response.data.secure_url;
+
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/users/${userId}/banner`,
+          { bannerUrl: uploadedImageUrl },
+          { headers: { Authorization: `Bearer ${storedToken}` } }
+        );
+
+        setImageUrl(uploadedImageUrl);
+
+        console.log("Profile banner updated:", uploadedImageUrl);
+      } catch (error) {
+        console.error("Error updating profile banner:", error);
+      }
     }
   };
 
-  const handleProfilePictureChange = (e) => {
+  const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setProfilePicture(fileURL);
+      try {
+        const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
+        const storedToken = localStorage.getItem("authToken");
+        const dataToUpload = new FormData();
+        dataToUpload.append("file", file);
+        dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+        const response = await axios.post(url, dataToUpload);
+        const uploadedImageUrl = response.data.secure_url;
+
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/users/${userId}/profile-picture`,
+          { profileImgUrl: uploadedImageUrl },
+          { headers: { Authorization: `Bearer ${storedToken}` } }
+        );
+
+        setProfilePicture(uploadedImageUrl);
+      } catch (error) {
+        console.error("Error updating profile picture:", error);
+      }
     }
   };
 
@@ -91,7 +146,6 @@ export default function ProfilePage() {
     navigate(`/games/${gameId}`);
   };
 
-  console.log(user)
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
@@ -108,10 +162,17 @@ export default function ProfilePage() {
         {user && user._id === profileUser._id && (
           <button
             className={styles.editProfileButton}
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => {
+              if (isEditing) {
+                handleSubmit();
+              } else {
+                setIsEditing(!isEditing);
+              }
+            }}
           >
             {isEditing ? 'Save Profile' : 'Edit Profile'}
           </button>
+
         )}
       </div>
 
@@ -125,7 +186,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="bannerUpload"
-              onChange={handleBannerChange}
+              onChange={e => handleBannerChange(e)}
               className={styles.uploadInput}
             />
           </div>
@@ -136,7 +197,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="profilePictureUpload"
-              onChange={handleProfilePictureChange}
+              onChange={e => handleProfilePictureChange(e)}
               className={styles.uploadInput}
             />
           </div>
@@ -145,25 +206,25 @@ export default function ProfilePage() {
 
       {profileUser.isPublisher && (
         <div className={styles.dashboard}>
-        <h2 className={styles.dashboardTitle}>Games Created</h2>
-        <div className={styles.gamesGrid}>
-          {profileUser.games.map(game => (
-            <div
-            key={game.id}
-            className={styles.gameCard}
-            onClick={() => handleGameClick(game._id)}
-            style={{
-              backgroundImage: `url(${game.image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {game.name}
+          <h2 className={styles.dashboardTitle}>Games Created</h2>
+          <div className={styles.gamesGrid}>
+            {profileUser.games.map(game => (
+              <div
+                key={game.id}
+                className={styles.gameCard}
+                onClick={() => handleGameClick(game._id)}
+                style={{
+                  backgroundImage: `url(${game.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              >
+                {game.name}
+              </div>
+            ))}
           </div>
-          ))}
         </div>
-      </div>
       )}
 
       <div className={styles.dashboard}>
@@ -171,19 +232,19 @@ export default function ProfilePage() {
         <div className={styles.gamesGrid}>
           {profileUser.played.map(game => (
             <div
-            key={game.id}
-            className={styles.gameCard}
-            onClick={() => handleGameClick(game._id)}
-            style={{
-              backgroundImage: `url(${game.image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {game.name}
-            {profileUser._id === user._id && <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>}
-          </div>
+              key={game.id}
+              className={styles.gameCard}
+              onClick={() => handleGameClick(game._id)}
+              style={{
+                backgroundImage: `url(${game.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            >
+              {game.name}
+              {profileUser._id === user._id && <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>}
+            </div>
           ))}
         </div>
       </div>
@@ -191,21 +252,21 @@ export default function ProfilePage() {
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>Wishlist</h2>
         <div className={styles.wishlistGrid}>
-        {profileUser.wishlist.map(game => (
+          {profileUser.wishlist.map(game => (
             <div
-            key={game.id}
-            className={styles.gameCard}
-            onClick={() => handleGameClick(game._id)}
-            style={{
-              backgroundImage: `url(${game.image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            {game.name}
-            {profileUser._id === user._id && <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>}
-          </div>
+              key={game.id}
+              className={styles.gameCard}
+              onClick={() => handleGameClick(game._id)}
+              style={{
+                backgroundImage: `url(${game.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            >
+              {game.name}
+              {profileUser._id === user._id && <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>}
+            </div>
           ))}
         </div>
       </div>
