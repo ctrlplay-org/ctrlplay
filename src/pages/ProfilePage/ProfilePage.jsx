@@ -6,14 +6,16 @@ import styles from './ProfilePage.module.scss';
 
 export default function ProfilePage() {
   const { userId } = useParams();
-  const { user, isLoading: authLoading } = useContext(AuthContext);
   const [profileUser, setProfileUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [banner, setBanner] = useState('');
   const [profilePicture, setProfilePicture] = useState('');
   const [games, setGames] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const { user, isLoading: authLoading } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,58 +49,72 @@ export default function ProfilePage() {
 
   const handleSubmit = async () => {
     const storedToken = localStorage.getItem("authToken");
+
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
-        bannerUrl: banner,
-        profileImgUrl: profilePicture
-      }, {
-        headers: { Authorization: `Bearer ${storedToken}` }
-      });
-      setIsEditing(false);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+            headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        setProfileUser(response.data);
+
+        setIsEditing(false);
+        setBanner('');  
+        setImageUrl('');  
     } catch (error) {
-      console.error('Error updating profile:', error);
+        console.error('Error updating profile:', error);
     }
-  };
+};
+const handleBannerChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+      const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
+      const storedToken = localStorage.getItem("authToken");
+      const dataToUpload = new FormData();
+      dataToUpload.append("file", file);
+      dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
 
-  const handleBannerChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
-        const storedToken = localStorage.getItem("authToken");
-        const dataToUpload = new FormData();
-        dataToUpload.append("file", file);
-        dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+      const response = await axios.post(url, dataToUpload);
+      const uploadedImageUrl = response.data.secure_url;
 
-        const response = await axios.post(url, dataToUpload);
-        const uploadedImageUrl = response.data.secure_url;
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/users/${userId}/banner`,
+        { bannerUrl: uploadedImageUrl },
+        { headers: { Authorization: `Bearer ${storedToken}` } }
+      );
 
-        setBanner(uploadedImageUrl);
-      } catch (error) {
-        console.error("Error updating profile banner:", error);
-      }
+      setImageUrl(uploadedImageUrl);
+
+      console.log("Profile banner updated:", uploadedImageUrl);
+    } catch (error) {
+      console.error("Error updating profile banner:", error);
     }
-  };
+  }
+};
 
-  const handleProfilePictureChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
-        const storedToken = localStorage.getItem("authToken");
-        const dataToUpload = new FormData();
-        dataToUpload.append("file", file);
-        dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+const handleProfilePictureChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+      const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/upload`;
+      const storedToken = localStorage.getItem("authToken");
+      const dataToUpload = new FormData();
+      dataToUpload.append("file", file);
+      dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+      const response = await axios.post(url, dataToUpload);
+      const uploadedImageUrl = response.data.secure_url;
 
-        const response = await axios.post(url, dataToUpload);
-        const uploadedImageUrl = response.data.secure_url;
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/users/${userId}/profile-picture`,
+        { profileImgUrl: uploadedImageUrl },
+        { headers: { Authorization: `Bearer ${storedToken}` } }
+      );
 
-        setProfilePicture(uploadedImageUrl);
-      } catch (error) {
-        console.error("Error updating profile picture:", error);
-      }
+      setProfilePicture(uploadedImageUrl);
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
     }
-  };
+  }
+};
 
   const handlePlayedDelete = async (gameId) => {
     try {
@@ -152,7 +168,7 @@ export default function ProfilePage() {
               if (isEditing) {
                 handleSubmit();
               } else {
-                setIsEditing(true);
+                setIsEditing(!isEditing);
               }
             }}
           >
@@ -171,7 +187,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="bannerUpload"
-              onChange={handleBannerChange}
+              onChange={e => handleBannerChange(e)}
               className={styles.uploadInput}
             />
           </div>
@@ -182,7 +198,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="profilePictureUpload"
-              onChange={handleProfilePictureChange}
+              onChange={e => handleProfilePictureChange(e)}
               className={styles.uploadInput}
             />
           </div>
