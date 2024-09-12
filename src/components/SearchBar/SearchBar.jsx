@@ -22,7 +22,6 @@ export default function SearchBar() {
         const storedToken = localStorage.getItem("authToken");
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/search/suggestions`, {
           params: { query },
-          headers: { Authorization: `Bearer ${storedToken}` },
         });
         setSuggestions(response.data);
       } catch (error) {

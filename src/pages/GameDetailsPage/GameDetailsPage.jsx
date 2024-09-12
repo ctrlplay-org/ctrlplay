@@ -21,7 +21,11 @@ function GameDetailsPage() {
     description: '',
     rating: 0,
   });
+  const [userPlayed, setUserPlayed] = useState(null)
+  const [userWishlist, setUserWishlist] = useState(null)
   const { isLoggedIn, user } = useContext(AuthContext);
+
+  const storedToken = localStorage.getItem('authToken');
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
@@ -31,7 +35,25 @@ function GameDetailsPage() {
     axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
       .then(response => setReviews(response.data))
       .catch(error => console.error("Error fetching reviews:", error));
-  }, [gameId]);
+
+
+    if (user && user._id) {
+
+      axios.get(`${import.meta.env.VITE_API_URL}/api/users/${user._id}`)
+        .then(response => {
+          const playedGames = response.data.played;
+          const wishlistGames = response.data.wishlist;
+
+          const isGameInPlayed = playedGames.includes(gameId);
+          const isGameInWishlist = wishlistGames.includes(gameId);
+
+          setUserPlayed(isGameInPlayed);
+          setUserWishlist(isGameInWishlist);
+        })
+        .catch(error => console.error("Error fetching user played and wishlist games:", error));
+    }
+
+  }, [user, gameId]);
 
   const handleAddReview = () => {
     if (!newReview.title.trim() || !newReview.rating) return;
@@ -62,25 +84,25 @@ function GameDetailsPage() {
 
   const handleEditReview = () => {
     if (!editReview.title.trim() || !editReview.rating) return;
-  
+
     const storedToken = localStorage.getItem('authToken');
-  
+
     axios.put(`${import.meta.env.VITE_API_URL}/api/reviews/${editingReviewId}`, editReview, {
       headers: { Authorization: `Bearer ${storedToken}` },
     })
       .then(response => {
         // Update the reviews state immediately after editing
-        setReviews(reviews.map(review => 
+        setReviews(reviews.map(review =>
           review._id === editingReviewId ? { ...review, ...editReview } : review
         ));
-  
+
         // Clear editing state
         setEditingReviewId(null);
         setEditReview({ title: '', description: '', rating: 0 });
       })
       .catch(error => console.error("Error while updating the review:", error));
   };
-  
+
 
   const handleDeleteReview = (reviewId) => {
     const storedToken = localStorage.getItem('authToken');
@@ -123,8 +145,9 @@ function GameDetailsPage() {
     )
       .then(response => {
         console.log("Game added to played list successfully:", response.data);
+        setUserPlayed(true)
       })
-      .catch(error => next(error));
+      .catch(error => console.log(error));
   };
 
   const handleAddWishlist = () => {
@@ -139,11 +162,12 @@ function GameDetailsPage() {
     )
       .then(response => {
         console.log("Game added to wishlist successfully:", response.data);
+        setUserWishlist(true)
       })
-      .catch(error => next(error));
+      .catch(error => console.log(error));
   };
 
-console.log(user)
+  console.log(user)
 
   return (
     <div className={styles.gameDetailsContainer}>
@@ -158,15 +182,15 @@ console.log(user)
           <h1 className={styles.gameTitle}>{gameDetails?.name}</h1>
         </div>
         {isLoggedIn && user && gameDetails?.publishers[0]._id === user._id && (
-    <>
-      <button onClick={handleEditGame} className={styles.editGameButton}>
-        Edit 
-      </button>
-      <button onClick={handleDeleteGame} className={styles.deleteGameButton}>
-        Delete
-      </button>
-    </>
-  )}
+          <>
+            <button onClick={handleEditGame} className={styles.editGameButton}>
+              Edit
+            </button>
+            <button onClick={handleDeleteGame} className={styles.deleteGameButton}>
+              Delete
+            </button>
+          </>
+        )}
       </div>
 
       {/* Content Section */}
@@ -182,15 +206,23 @@ console.log(user)
             </p>
           </div>
           <div className={styles.editColumn}>
-            
-            {isLoggedIn && !user.played && (
+
+            {isLoggedIn && !userPlayed && !userWishlist && (
               <>
-                  <button onClick={handleAddPlayed} className={styles.playedButton}>
-                    Played
-                  </button>
-                  <button onClick={handleAddWishlist} className={styles.wishlistButton}>
-                    Wishlist
-                  </button>
+                <button onClick={handleAddPlayed} className={styles.playedButton}>
+                  Played
+                </button>
+                <button onClick={handleAddWishlist} className={styles.wishlistButton}>
+                  Wishlist
+                </button>
+              </>
+            )}
+
+            {isLoggedIn && userWishlist && !userPlayed && (
+              <>
+                <button onClick={handleAddPlayed} className={styles.playedButton}>
+                  Played
+                </button>
               </>
             )}
           </div>
