@@ -26,8 +26,8 @@ export default function Navbar() {
           />
         </Link>
         <SearchBar />
-        <Link to="/about">About</Link>
         <div className={styles.links}>
+        <Link to="/about">About</Link>
           {isLoggedIn && (
             <>
               <div className={styles.profileDropdown}>
@@ -51,10 +51,12 @@ export default function Navbar() {
               </div>
             </>
           )}
-    
+
+          <div>
           {!isLoggedIn && (
             <Link to="/login">Sign In</Link>
           )}
+          </div>
         </div>
       </nav>
     </div>

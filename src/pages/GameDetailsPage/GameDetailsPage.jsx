@@ -155,6 +155,16 @@ function GameDetailsPage() {
         <div className={styles.overlay}>
           <h1 className={styles.gameTitle}>{gameDetails?.name}</h1>
         </div>
+        {isLoggedIn && user && gameDetails?.publishers[0]._id === user._id && (
+    <>
+      <button onClick={handleEditGame} className={styles.editGameButton}>
+        Edit 
+      </button>
+      <button onClick={handleDeleteGame} className={styles.deleteGameButton}>
+        Delete
+      </button>
+    </>
+  )}
       </div>
 
       {/* Content Section */}
@@ -170,16 +180,7 @@ function GameDetailsPage() {
             </p>
           </div>
           <div className={styles.editColumn}>
-            {isLoggedIn && user && gameDetails?.publishers[0]._id === user._id && (
-                <>
-                  <button onClick={handleEditGame} className={styles.editButton}>
-                    Edit Game
-                  </button>
-                  <button onClick={handleDeleteGame} className={styles.deleteButton}>
-                    Delete Game
-                  </button>
-                </>
-            )}
+            
             {isLoggedIn && (
               <>
                   <button onClick={handleAddPlayed} className={styles.playedButton}>
@@ -249,7 +250,7 @@ function GameDetailsPage() {
                     {isLoggedIn && user && user._id === review.author._id && (
                       <>
                         <button onClick={() => handleDeleteReview(review._id)} className={styles.deleteButton}>
-                          X
+                          Delete
                         </button>
                         <button
                           onClick={() => {
