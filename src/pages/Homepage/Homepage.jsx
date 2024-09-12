@@ -33,7 +33,7 @@ export default function Homepage() {
           <div className={styles.gamesGrid}>
             {games.slice().reverse().slice(0, 6).map((game) => (
               <div
-                key={game.id}
+                key={game._id}
                 className={styles.gameCard}
                 onClick={() => handleGameClick(game._id)}
                 style={{
