@@ -160,7 +160,7 @@ const handleProfilePictureChange = async (e) => {
       </div>
 
       <div className={styles.profileSection}>
-        <h1 className={styles.username}>{profileUser.name}</h1>
+        <div   className={styles.overlay}><h1 className={styles.username}>{profileUser.name}</h1></div>
         {user && user._id === profileUser._id && (
           <button
             className={styles.editProfileButton}
@@ -220,8 +220,9 @@ const handleProfilePictureChange = async (e) => {
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
                 }}
-              >
-                {game.name}
+              > <div className={styles.overlay}>
+                  <h1 className={styles.gameTitle}>{game?.name}</h1>
+                </div>
               </div>
             ))}
           </div>
@@ -243,10 +244,13 @@ const handleProfilePictureChange = async (e) => {
                 backgroundRepeat: 'no-repeat',
               }}
             >
-              {game.name}
+
               {profileUser._id === user._id && (
-                <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>
+                <button onClick={() => handlePlayedDelete(game._id)} className={styles.deleteButton}>X</button>
               )}
+                <div className={styles.overlay}>
+                  <h1 className={styles.gameTitle}>{game?.name}</h1>
+                </div>
             </div>
           ))}
         </div>
@@ -267,10 +271,13 @@ const handleProfilePictureChange = async (e) => {
                 backgroundRepeat: 'no-repeat',
               }}
             >
-              {game.name}
-              {profileUser._id === user._id && (
-                <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>
+
+            {profileUser._id === user._id && (
+                <button onClick={() => handlePlayedDelete(game._id)} className={styles.deleteButton}>X</button>
               )}
+               <div className={styles.overlay}>
+                  <h1 className={styles.gameTitle}>{game?.name}</h1>
+                </div>
             </div>
           ))}
         </div>

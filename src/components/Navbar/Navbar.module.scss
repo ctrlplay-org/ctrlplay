@@ -1,11 +1,16 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
 .navbar {
-  height: 100px;
+  height: auto;
   width: 100%;
   background-color: #282828;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+
 }
 
 .nav {
@@ -13,11 +18,24 @@
   align-items: center;
   width: 100%;
   justify-content: space-between;
+
+  @include mixin.sm-lt {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .video {
   height: 100px;
   cursor: pointer;
+
+  @include mixin.sm-lt {
+    height: 80px;
+  }
+
+  @include mixin.xs {
+    height: 70px;
+  }
 }
 
 .searchForm {
@@ -30,34 +48,27 @@
   border-radius: 50px;
   border: 1px solid #DEDFEC;
   background: #FFF;
-}
 
-.searchInput {
-  flex-grow: 1;
-  padding: 0 10px;
-  border: none;
-  outline: none;
-  color: #959CB0;
-  font-family: 'Inter', sans-serif;
-  font-size: 15.125px;
-}
+  @include mixin.sm-lt {
+    width: 100%;
+    padding: 6px 12px;
+  }
 
-.searchButton {
-  display: flex;
-  width: 28px;
-  height: 28px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  background-color: white;
-  border: none;
-  cursor: pointer;
+  @include mixin.xs {
+    width: 90%;
+    padding: 5px 10px;
+  }
 }
 
 .links {
   display: flex;
   gap: 20px; 
   align-items: center;
+
+  @include mixin.sm-lt {
+    flex-direction: column; // Stack links vertically on small screens
+    gap: 10px;
+  }
 }
 
 .navbar a {
@@ -65,6 +76,14 @@
   font-family: 'Inter', sans-serif;
   font-size: 14.875px;
   text-decoration: none;
+
+  @include mixin.sm-lt {
+    font-size: 14px;
+  }
+
+  @include mixin.xs {
+    font-size: 13px;
+  }
 }
 
 .navbar a:hover {
@@ -79,6 +98,16 @@
   border: 4px solid white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+
+  @include mixin.sm-lt {
+    width: 50px;
+    height: 50px;
+  }
+
+  @include mixin.xs {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .profileDropdown {
@@ -98,6 +127,10 @@
   width: 140px;
   flex-direction: column;
   z-index: 100;
+
+  @include mixin.sm-lt {
+    top: 60px; // Adjust for smaller profile pictures
+  }
 }
 
 .dropdownMenu a, .dropdownMenu button {
@@ -107,6 +140,10 @@
   border: none;
   cursor: pointer;
   color: #333;
+
+  @include mixin.xs {
+    padding: 8px 16px;
+  }
 }
 
 .dropdownMenu a:hover, .dropdownMenu button:hover {

@@ -1,3 +1,8 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
+
 .AddGamePage {
   max-width: 500px;
   margin: 30px auto;

@@ -1,3 +1,7 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
 .releases {
   display: flex;
   flex-direction: column;
@@ -37,6 +41,11 @@ h1 {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   }
+
+  @include mixin.sm-lt {
+    width: 95vw;
+    justify-self: center;
+  }
 }
 
 .gameImage {
@@ -54,6 +63,10 @@ h1 {
   font-size: 32px;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+  @include mixin.sm-lt {
+    font-size: 28px;
+  }
 }
 
 .gameReleased {

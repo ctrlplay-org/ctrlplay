@@ -1,3 +1,8 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
+
 .profileContainer {
   display: flex;
   flex-direction: column;
@@ -43,17 +48,23 @@ h3 {
   border: 4px solid white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+
 .profileSection {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  position: relative; 
+  bottom: 40px;
+  justify-self: center;
+  justify-content: center;
+  align-items: center;
+  left: 5%;
+  transform: translateX(-50%); 
   z-index: 10;
+  color: white;
 }
 
 .username {
   font-size: 28px;
+  padding-left: 5px;
+  padding-right: 5px;
   font-weight: 600;
   color: white;
 }
@@ -114,12 +125,54 @@ h3 {
   color: #fff;
 }
 
+.overlay {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+}
+
+.gameTitle {
+  font-size: 32px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+  @include mixin.xs {
+    font-size: 23px;
+  }
+
+  @include mixin.sm-lt {
+    font-size: 23px;
+  }
+}
+
+.deleteButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #dc3545; 
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+
+  @include mixin.xs {
+    padding: 3px 8px;
+    top: 5px;
+    left: 5px;
+  }
+}
+
 .gamesGrid,
 .wishlistGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   grid-gap: 20px;
   padding-top: 20px;
+}
+
+.gameCard {
+  position: relative;
 }
 
 .gameCard,
@@ -139,4 +192,13 @@ h3 {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   }
+
+  @include mixin.xs {
+    width: 80vw;
+    }
+
+  @include mixin.sm {
+    width: 80vw;
+    justify-self: center;
+    }
 }

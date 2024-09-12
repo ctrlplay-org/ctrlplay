@@ -1,81 +1,147 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
 .searchForm {
-    display: flex;
-    width: 440px;
-    padding: 8px 18px 6px 17px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 50px;
-    border: 1px solid #DEDFEC;
-    background: #FFF;
-    margin: 0 auto;
-    position: relative;
-  }
-  
-  .searchInput {
-    flex-grow: 1;
-    padding: 0 10px;
-    border: none;
-    outline: none;
-    color: #959CB0;
-    font-family: 'Inter', sans-serif;
-    font-size: 15.125px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
-  
-  .searchButton {
-    display: flex;
-    width: 28px;
-    height: 28px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 10%;
-    background-color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .fa {
-    font-size: 20px;
-  }
-  
-  .searchContainer {
-    position: relative;
-  }
-  
-  
-  .loading {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #888;
-  }
-  
-  .suggestionsList {
-    position: absolute;
-    list-style: none;
-    padding: 0;
-    top: 100%;
-    margin: 0;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  display: flex;
+  width: 440px;
+  padding: 8px 18px 6px 17px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50px;
+  border: 1px solid #DEDFEC;
+  background: #FFF;
+  margin: 0 auto;
+  position: relative;
+
+  @include mixin.sm-lt {
     width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-sizing: border-box;
+    padding: 6px 12px;
   }
-  
-  .suggestionItem {
-    padding: 8px;
-    cursor: pointer;
+
+  @include mixin.md {
+    width: 360px;
   }
-  
-  .suggestionItem:hover {
-    background-color: #d0448d;
-    width: 100%;
+
+  @include mixin.lg {
+    width: 400px;
   }
+
+  @include mixin.xs {
+    width: 90%; // Make it fit smaller screens
+    padding: 5px 10px;
+  }
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 0 10px;
+  border: none;
+  outline: none;
+  color: #959CB0;
+  font-family: 'Inter', sans-serif;
+  font-size: 15.125px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  @include mixin.sm-lt {
+    width: 80%;
+  }
+
+  @include mixin.md {
+    font-size: 14.5px;
+  }
+
+  @include mixin.lg {
+    font-size: 15px;
+  }
+
+  @include mixin.xs {
+    font-size: 13px; // Reduce font size for small screens
+  }
+}
+
+.searchButton {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 10%;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+
+  @include mixin.sm-lt {
+    width: 24px;
+    height: 24px;
+  }
+
+  @include mixin.md {
+    width: 26px;
+    height: 26px;
+  }
+
+  @include mixin.xs {
+    width: 22px; // Make the button smaller for tiny screens
+    height: 22px;
+  }
+}
+
+.fa {
+  font-size: 20px;
+
+  @include mixin.sm-lt {
+    font-size: 18px;
+  }
+
+  @include mixin.md {
+    font-size: 19px;
+  }
+
+  @include mixin.xs {
+    font-size: 16px; // Reduce the icon size for small screens
+  }
+}
+
+.suggestionsList {
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  top: 100%;
+  margin: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-sizing: border-box;
+}
   
+.suggestionItem {
+  padding: 8px;
+  cursor: pointer;
+
+  @include mixin.sm-lt {
+    padding: 6px;
+  }
+
+  @include mixin.md {
+    padding: 7px;
+  }
+
+  @include mixin.xs {
+    padding: 5px; // Smaller padding for small screens
+  }
+}
+
+.suggestionItem:hover {
+  background-color: #d0448d;
+  width: 100%;
+}
+
