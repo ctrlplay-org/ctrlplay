@@ -143,6 +143,8 @@ function GameDetailsPage() {
       .catch(error => next(error));
   };
 
+console.log(user)
+
   return (
     <div className={styles.gameDetailsContainer}>
       {/* Full-Width Banner */}
@@ -181,7 +183,7 @@ function GameDetailsPage() {
           </div>
           <div className={styles.editColumn}>
             
-            {isLoggedIn && (
+            {isLoggedIn && !user.played && (
               <>
                   <button onClick={handleAddPlayed} className={styles.playedButton}>
                     Played

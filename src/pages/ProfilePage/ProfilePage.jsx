@@ -1,22 +1,19 @@
-import { useState, useEffect } from 'react';
-import styles from './ProfilePage.module.scss';
-import { useContext } from "react";
-import { AuthContext } from "../../context/auth.context";
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from "../../context/auth.context";
+import styles from './ProfilePage.module.scss';
 
 export default function ProfilePage() {
   const { userId } = useParams();
+  const { user, isLoading: authLoading } = useContext(AuthContext);
   const [profileUser, setProfileUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [banner, setBanner] = useState('');
   const [profilePicture, setProfilePicture] = useState('');
   const [games, setGames] = useState([]);
   const [wishlist, setWishlist] = useState([]);
-  const { user, isLoading: authLoading } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [imageUrl, setImageUrl] = useState(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,20 +47,18 @@ export default function ProfilePage() {
 
   const handleSubmit = async () => {
     const storedToken = localStorage.getItem("authToken");
-
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-        });
-        setProfileUser(response.data);
-
-        setIsEditing(false);
-        setBanner('');  
-        setImageUrl('');  
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+        bannerUrl: banner,
+        profileImgUrl: profilePicture
+      }, {
+        headers: { Authorization: `Bearer ${storedToken}` }
+      });
+      setIsEditing(false);
     } catch (error) {
-        console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error);
     }
-};
+  };
 
   const handleBannerChange = async (e) => {
     const file = e.target.files[0];
@@ -78,15 +73,7 @@ export default function ProfilePage() {
         const response = await axios.post(url, dataToUpload);
         const uploadedImageUrl = response.data.secure_url;
 
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/users/${userId}/banner`,
-          { bannerUrl: uploadedImageUrl },
-          { headers: { Authorization: `Bearer ${storedToken}` } }
-        );
-
-        setImageUrl(uploadedImageUrl);
-
-        console.log("Profile banner updated:", uploadedImageUrl);
+        setBanner(uploadedImageUrl);
       } catch (error) {
         console.error("Error updating profile banner:", error);
       }
@@ -102,14 +89,9 @@ export default function ProfilePage() {
         const dataToUpload = new FormData();
         dataToUpload.append("file", file);
         dataToUpload.append("upload_preset", import.meta.env.VITE_UNSIGNED_UPLOAD_PRESET);
+
         const response = await axios.post(url, dataToUpload);
         const uploadedImageUrl = response.data.secure_url;
-
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/users/${userId}/profile-picture`,
-          { profileImgUrl: uploadedImageUrl },
-          { headers: { Authorization: `Bearer ${storedToken}` } }
-        );
 
         setProfilePicture(uploadedImageUrl);
       } catch (error) {
@@ -149,7 +131,11 @@ export default function ProfilePage() {
   return (
     <div className={styles.profileContainer}>
       <div className={styles.bannerContainer}>
-        <img src={profileUser.bannerImg || '/path/to/default/banner.jpg'} alt="Banner" className={styles.banner} />
+        <img 
+          src={profileUser.bannerImg || '/path/to/default/banner.jpg'} 
+          alt="Banner" 
+          className={styles.banner} 
+        />
         <img
           src={profileUser.profileImg || '/path/to/profile/photo.jpg'}
           alt="Profile"
@@ -166,13 +152,12 @@ export default function ProfilePage() {
               if (isEditing) {
                 handleSubmit();
               } else {
-                setIsEditing(!isEditing);
+                setIsEditing(true);
               }
             }}
           >
             {isEditing ? 'Save Profile' : 'Edit Profile'}
           </button>
-
         )}
       </div>
 
@@ -186,7 +171,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="bannerUpload"
-              onChange={e => handleBannerChange(e)}
+              onChange={handleBannerChange}
               className={styles.uploadInput}
             />
           </div>
@@ -197,7 +182,7 @@ export default function ProfilePage() {
             <input
               type="file"
               id="profilePictureUpload"
-              onChange={e => handleProfilePictureChange(e)}
+              onChange={handleProfilePictureChange}
               className={styles.uploadInput}
             />
           </div>
@@ -210,7 +195,7 @@ export default function ProfilePage() {
           <div className={styles.gamesGrid}>
             {profileUser.games.map(game => (
               <div
-                key={game.id}
+                key={game._id}
                 className={styles.gameCard}
                 onClick={() => handleGameClick(game._id)}
                 style={{
@@ -232,7 +217,7 @@ export default function ProfilePage() {
         <div className={styles.gamesGrid}>
           {profileUser.played.map(game => (
             <div
-              key={game.id}
+              key={game._id}
               className={styles.gameCard}
               onClick={() => handleGameClick(game._id)}
               style={{
@@ -243,7 +228,9 @@ export default function ProfilePage() {
               }}
             >
               {game.name}
-              {profileUser._id === user._id && <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>}
+              {profileUser._id === user._id && (
+                <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>
+              )}
             </div>
           ))}
         </div>
@@ -254,7 +241,7 @@ export default function ProfilePage() {
         <div className={styles.wishlistGrid}>
           {profileUser.wishlist.map(game => (
             <div
-              key={game.id}
+              key={game._id}
               className={styles.gameCard}
               onClick={() => handleGameClick(game._id)}
               style={{
@@ -265,7 +252,9 @@ export default function ProfilePage() {
               }}
             >
               {game.name}
-              {profileUser._id === user._id && <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>}
+              {profileUser._id === user._id && (
+                <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>
+              )}
             </div>
           ))}
         </div>

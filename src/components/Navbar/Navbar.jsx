@@ -45,7 +45,7 @@ export default function Navbar() {
                         </>
                     )}
                     <Link to={`/users/${user._id}`}>Profile</Link>
-                    <button onClick={logOutUser}>Logout</button>
+                   <Link to="/" onClick={logOutUser}>Log out</Link>
                   </div>
                 )}
               </div>
