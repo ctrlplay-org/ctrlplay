@@ -244,7 +244,7 @@ const handleProfilePictureChange = async (e) => {
               }}
             >
               {game.name}
-              {profileUser._id === user._id && (
+              {user && profileUser._id === user._id && (
                 <button onClick={() => handlePlayedDelete(game._id)} className={styles.delButton}>X</button>
               )}
             </div>
@@ -268,7 +268,7 @@ const handleProfilePictureChange = async (e) => {
               }}
             >
               {game.name}
-              {profileUser._id === user._id && (
+              {user && profileUser._id === user._id && (
                 <button onClick={() => handleWishlistDelete(game._id)} className={styles.delButton}>X</button>
               )}
             </div>
