@@ -90,16 +90,56 @@
 
 /* Reviews Container */
 .reviewsContainer {
-  margin-bottom: 20px;
-
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
 }
 
 .reviewCard {
-  background-color: #f9f9f9;
+  position: relative; /* Allows absolute positioning for the buttons */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-basis: calc(50% - 10px);
+  background-color: #282828;
+  border: 1px solid white;
+  color: white;
   padding: 15px;
   border-radius: 25px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 20px;
+  width: 60px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.editButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #9cf831;
+  color: white;
+  border: none;
+  width: 60px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.reviewCard h3 {
+  padding-top: 40px; /* Space for the buttons */
 }
 
 .reviewCard h3 {
@@ -107,9 +147,30 @@
   font-size: 18px;
 }
 
+.reviewFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
 .reviewCard p {
   margin-bottom: 5px;
   font-size: 16px;
+}
+
+.reviewStars {
+  margin-bottom: 10px; /* Adjust space between stars and description */
+}
+
+.reviewAuthor {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.reviewDate {
+  font-size: 14px;
+  color: #ccc;
 }
 
 /* Add Review Section */
@@ -153,6 +214,11 @@
   }
 }
 
+.reviewTitle {
+  color: white;
+  text-align: center;
+}
+
 span {
   // color: #c7ff0b;
   color: #d0448d;
@@ -172,7 +238,7 @@ span {
 }
 
 .editButton {
-  background-color: #ffc107;
+  background-color: #9cf831;
 }
 
 .deleteButton {

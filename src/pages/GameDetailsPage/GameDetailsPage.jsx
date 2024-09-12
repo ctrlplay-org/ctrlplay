@@ -62,22 +62,25 @@ function GameDetailsPage() {
 
   const handleEditReview = () => {
     if (!editReview.title.trim() || !editReview.rating) return;
-
+  
     const storedToken = localStorage.getItem('authToken');
-
+  
     axios.put(`${import.meta.env.VITE_API_URL}/api/reviews/${editingReviewId}`, editReview, {
       headers: { Authorization: `Bearer ${storedToken}` },
     })
-      .then(() => {
-        axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/game/${gameId}`)
-          .then(response => setReviews(response.data))
-          .catch(error => console.error("Error fetching reviews:", error));
-
+      .then(response => {
+        // Update the reviews state immediately after editing
+        setReviews(reviews.map(review => 
+          review._id === editingReviewId ? { ...review, ...editReview } : review
+        ));
+  
+        // Clear editing state
         setEditingReviewId(null);
         setEditReview({ title: '', description: '', rating: 0 });
       })
       .catch(error => console.error("Error while updating the review:", error));
   };
+  
 
   const handleDeleteReview = (reviewId) => {
     const storedToken = localStorage.getItem('authToken');
@@ -202,51 +205,63 @@ function GameDetailsPage() {
                   <div className={styles.editReviewSection}>
                     <input
                       type="text"
-                      placeholder="Title"
                       value={editReview.title}
                       onChange={(e) => setEditReview({ ...editReview, title: e.target.value })}
                       className={styles.inputField}
+                      placeholder="Title"
                     />
                     <textarea
                       value={editReview.description}
                       onChange={(e) => setEditReview({ ...editReview, description: e.target.value })}
-                      placeholder="Description"
                       className={styles.reviewInput}
+                      placeholder="Description"
                     />
                     <ReactStars
                       count={5}
                       onChange={(newRating) => setEditReview({ ...editReview, rating: newRating })}
                       size={24}
-                      activeColor="#c7ff0b"
+                      activeColor="#9cf831"
                       value={editReview.rating}
                     />
-                    <button onClick={handleEditReview} className={styles.editReviewButton}>
-                      Save Changes
-                    </button>
-                    <button onClick={() => setEditingReviewId(null)} className={styles.cancelButton}>
-                      Cancel
+                    <button onClick={handleEditReview} className={styles.addReviewButton}>
+                      Update Review
                     </button>
                   </div>
                 ) : (
                   <div className={styles.reviewContent}>
-                    <h3>{review.title}</h3>
+                    <h3 className={styles.reviewTitle}>{review.title}</h3>
+                    <div className={styles.reviewStars}>
+                      <ReactStars
+                        count={5}
+                        value={review.rating}
+                        size={24}
+                        edit={false}
+                        activeColor="#9cf831"
+                      />
+                    </div>
                     <p>{review.description}</p>
-                    <p>Rating: {review.rating}</p>
-                    <small>{new Date(review.date).toLocaleDateString()}</small>
-
+                    <div className={styles.reviewFooter}>
+                      <p className={styles.reviewAuthor}>By: {review.author.name}</p>
+                      <small className={styles.reviewDate}>
+                        {new Date(review.date).toLocaleDateString()}
+                      </small>
+                    </div>
                     {isLoggedIn && user && user._id === review.author._id && (
                       <>
                         <button onClick={() => handleDeleteReview(review._id)} className={styles.deleteButton}>
-                          Delete
+                          X
                         </button>
-                        <button onClick={() => {
-                          setEditingReviewId(review._id);
-                          setEditReview({
-                            title: review.title,
-                            description: review.description,
-                            rating: review.rating,
-                          });
-                        }} className={styles.editButton}>
+                        <button
+                          onClick={() => {
+                            setEditingReviewId(review._id);
+                            setEditReview({
+                              title: review.title,
+                              description: review.description,
+                              rating: review.rating,
+                            });
+                          }}
+                          className={styles.editButton}
+                        >
                           Edit
                         </button>
                       </>
