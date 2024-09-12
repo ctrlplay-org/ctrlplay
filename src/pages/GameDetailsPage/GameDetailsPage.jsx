@@ -6,8 +6,10 @@ import styles from './GameDetailsPage.module.scss';
 import { AuthContext } from "../../context/auth.context";
 
 function GameDetailsPage() {
+
   const { gameId } = useParams();
   const navigate = useNavigate();
+
   const [gameDetails, setGameDetails] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -23,11 +25,17 @@ function GameDetailsPage() {
   });
   const [userPlayed, setUserPlayed] = useState(null)
   const [userWishlist, setUserWishlist] = useState(null)
+
   const { isLoggedIn, user } = useContext(AuthContext);
 
   const storedToken = localStorage.getItem('authToken');
 
   useEffect(() => {
+
+    console.log("*******************");
+    console.log("sending our cool requests.....");
+    
+
     axios.get(`${import.meta.env.VITE_API_URL}/api/games/${gameId}`)
       .then(response => setGameDetails(response.data))
       .catch(error => console.error("Error fetching game details:", error));
@@ -38,14 +46,16 @@ function GameDetailsPage() {
 
 
     if (user && user._id) {
-
       axios.get(`${import.meta.env.VITE_API_URL}/api/users/${user._id}`)
         .then(response => {
           const playedGames = response.data.played;
           const wishlistGames = response.data.wishlist;
 
-          const isGameInPlayed = playedGames.includes(gameId);
-          const isGameInWishlist = wishlistGames.includes(gameId);
+          const playedIds = playedGames.map(item => item._id);   
+          const isGameInPlayed = playedIds.includes(gameId);
+
+          const wishListIds = wishlistGames.map(item => item._id);          
+          const isGameInWishlist = wishListIds.includes(gameId);
 
           setUserPlayed(isGameInPlayed);
           setUserWishlist(isGameInWishlist);
@@ -166,8 +176,6 @@ function GameDetailsPage() {
       })
       .catch(error => console.log(error));
   };
-
-  console.log(user)
 
   return (
     <div className={styles.gameDetailsContainer}>
