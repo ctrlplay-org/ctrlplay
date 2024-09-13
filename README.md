@@ -1,8 +1,14 @@
-# React + Vite
+# CtrlPlay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## What is CtrlPlay?
 
-Currently, two official plugins are available:
+CtrlPlay is a game reviewing application where you can add, update and delete your own games whilst receiving reviews from other users!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How to run it on your computer:
+
+1. Clone this repo on to your laptop (git clone https://github.com/ctrlplay-org/ctrlplay-client)
+2. Install the required dependencies (npm install)
+3. Clone the repo for the server backend to your laptop (git clone https://github.com/ctrlplay-org/ctrlplay-server)
+4. Run the application on both repos (npm run dev)
+
+# Link to the live demo: https://ctrlplay.netlify.app/
