@@ -120,7 +120,7 @@ export default function LogIn() {
               required
             />
             {passwordError && <p className={styles.error}>{passwordError}</p>}
-            <label>Are you a Publisher?</label>
+            <label className={styles.labelPublisher}>Are you a Publisher?</label>
             <div className={styles.formRadio}>
               <div>
                 <input
@@ -131,7 +131,7 @@ export default function LogIn() {
                   onChange={handleIsPublisherChange}
                   checked={isPublisher === true}
                 />
-                <label htmlFor="isPublisher1">Yes</label>
+                <label htmlFor="isPublisher1" className={styles.labelPublisher}>Yes</label>
               </div>
               <div>
                 <input
@@ -142,7 +142,7 @@ export default function LogIn() {
                   onChange={handleIsPublisherChange}
                   checked={isPublisher === false}
                 />
-                <label htmlFor="isPublisher2">No</label>
+                <label htmlFor="isPublisher2" className={styles.labelPublisher}>No</label>
               </div>
             </div>
             <button className={styles.btn}>Sign Up</button>

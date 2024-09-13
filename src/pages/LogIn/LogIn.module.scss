@@ -1,3 +1,8 @@
+@use '../../assets/styles/mixins' as mixin;
+@use '../../assets/styles/debug';
+@use '../../assets/styles/index.scss';
+
+
 .LogIn {
   align-items: center;
   background-color: #e9e9e9;
@@ -13,12 +18,25 @@
 	font-size: 16px;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
 		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+    @include mixin.sm {
+      background-position: top;
+      font-size: 14px;
+    }
+  
+    @include mixin.xs {
+      font-size: 12px;
+    }
 }
 
 .formTitle {
   font-weight: 300;
   margin: 0;
   margin-bottom: 1.25rem;
+
+  @include mixin.xs {
+    font-size: 1.5rem;
+  }
 }
 
 .link {
@@ -39,6 +57,19 @@
   width: 100%;
   display: flex;
   transition: transform 0.6s ease-in-out;
+
+  @include mixin.sm {
+    height: 580px;
+  }
+
+  @include mixin.xs {
+    height: 560px;
+    flex-direction: column;
+  }
+}
+
+.labelPublisher {
+  color: black ;
 }
 
 .containerForm {
@@ -46,6 +77,8 @@
   position: absolute;
   top: 0;
   transition: all 0.6s ease-in-out;
+
+  
 }
 
 .containerSignin {
@@ -82,6 +115,7 @@
   transition: transform 0.6s ease-in-out;
   width: 50%;
   z-index: 100;
+
 }
 
 .container.rightPanelActive .containerOverlay {
@@ -100,6 +134,7 @@
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
   width: 200%;
+
 }
 
 .container.rightPanelActive .overlay {
@@ -149,6 +184,10 @@
   padding: 0.9rem 4rem;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
+
+  @include mixin.xs {
+    padding: 0.75rem 2.5rem;
+  }
 }
 
 .form > .btn {
@@ -172,11 +211,20 @@
   padding: 0 3rem;
   height: 100%;
   text-align: center;
+
+  @include mixin.xs {
+    padding: 1.5rem;
+  }
 }
 
 .formRadio {
   display: flex;
   gap: 20px;
+
+  @include mixin.xs {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .input {
@@ -186,6 +234,10 @@
   padding: 0.9rem 0.9rem;
   margin: 0.5rem 0;
   width: 100%;
+
+  @include mixin.xs {
+    padding: 0.75rem 0.75rem;
+  }
 }
 
 @keyframes show {
