@@ -29,7 +29,7 @@
   }
 
   @include mixin.xs {
-    width: 90%; // Make it fit smaller screens
+    width: 90%; 
     padding: 5px 10px;
   }
 }
@@ -59,7 +59,7 @@
   }
 
   @include mixin.xs {
-    font-size: 13px; // Reduce font size for small screens
+    font-size: 13px; 
   }
 }
 
@@ -86,7 +86,7 @@
   }
 
   @include mixin.xs {
-    width: 22px; // Make the button smaller for tiny screens
+    width: 22px;
     height: 22px;
   }
 }
@@ -103,24 +103,22 @@
   }
 
   @include mixin.xs {
-    font-size: 16px; // Reduce the icon size for small screens
+    font-size: 16px; 
   }
 }
 
 .suggestionsList {
-  position: absolute;
   list-style: none;
   padding: 0;
-  top: 100%;
   margin: 0;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1050;
   box-sizing: border-box;
+  position: absolute; 
 }
   
 .suggestionItem {
@@ -136,7 +134,7 @@
   }
 
   @include mixin.xs {
-    padding: 5px; // Smaller padding for small screens
+    padding: 5px; 
   }
 }
 
