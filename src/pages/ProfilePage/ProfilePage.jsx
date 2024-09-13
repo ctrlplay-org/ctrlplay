@@ -273,7 +273,7 @@ const handleProfilePictureChange = async (e) => {
             >
 
             {profileUser._id === user._id && (
-                <button onClick={() => handlePlayedDelete(game._id)} className={styles.deleteButton}>X</button>
+                <button onClick={() => handleWishlistDelete(wishlist._id)} className={styles.deleteButton}>X</button>
               )}
                <div className={styles.overlay}>
                   <h1 className={styles.gameTitle}>{game?.name}</h1>
